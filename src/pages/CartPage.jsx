@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
@@ -48,16 +51,45 @@ const CartPage = () => {
   );
 
   // Place order
-  const placeOrder = () => {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  const placeOrder = async () => {
     if (cart.length === 0) {
       alert("Cart is empty");
       return;
     }
 
-    alert("Order placed successfully! Total: ₹" + totalPrice.toFixed(2));
+    if (loading || !user) {
+      alert("Please login first");
+      navigate("/user/login");
+      return;
+    }
 
-    localStorage.removeItem("cart");
-    setCart([]);
+    try {
+      const orderItems = cart.map((item) => ({
+        productName: item.name,
+        price: parseFloat(item.price),
+        quantity: item.quantity || 1,
+      }));
+
+      const response = await axios.post(
+        "http://localhost:8765/api/orders",
+        { items: orderItems },
+        { withCredentials: true },
+      );
+
+      alert(
+        `Order #${response.data.orderId} placed! Total: ₹${response.data.total.toFixed(2)}`,
+      );
+
+      localStorage.removeItem("cart");
+      setCart([]);
+    } catch (error) {
+      alert(
+        "Order failed: " + (error.response?.data?.message || error.message),
+      );
+    }
   };
 
   return (

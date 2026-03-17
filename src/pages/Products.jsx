@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 
 const Products = () => {
-  const { user } = useAuth();
+  const { user, owner } = useAuth();
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState([]);
   const [quantities, setQuantities] = useState({});
@@ -83,6 +83,21 @@ const Products = () => {
         Loading products...
       </div>
     );
+
+  if (!user && !owner) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-center px-4">
+        <h1 className="text-4xl font-bold mb-4">Products</h1>
+        <p className="text-xl mb-8">Please login to view products</p>
+        <a
+          href="/user/login"
+          className="bg-blue-500 text-white px-8 py-3 rounded-xl hover:bg-blue-600 font-bold"
+        >
+          Login
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-12">

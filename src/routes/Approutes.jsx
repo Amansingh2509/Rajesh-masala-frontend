@@ -10,15 +10,24 @@ import CreateItemOwner from "../item-owner/createitemowner";
 import ProtectedRoute from "../components/ProtectedRoute";
 import OwnerDashboard from "../pages/OwnerDashboard";
 import About from "../pages/About";
+import Contact from "../pages/Contact";
 import CartPage from "../pages/CartPage";
 import Products from "../pages/Products";
 
 const Approutes = () => {
   return (
     <Routes>
+      <Route path="/contact" element={<Contact />} />
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
-      <Route path="/products" element={<Products />} />
+      <Route
+        path="/products"
+        element={
+          <ProtectedRoute allowedRole="user">
+            <Products />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/user/login" element={<UserLogin />} />
       <Route path="/user/register" element={<UserRegister />} />
       <Route path="/owner/login" element={<OwnerLogin />} />
