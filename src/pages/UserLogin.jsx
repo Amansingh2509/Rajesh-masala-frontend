@@ -7,6 +7,7 @@ import GoogleLoginButton from "../components/GoogleLoginButton";
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -17,14 +18,12 @@ const UserLogin = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const response = await axios.post(
         "http://localhost:8765/api/auth/user/login",
         { email, password },
         { withCredentials: true },
       );
-
       if (response.status === 200) {
         login("user", response.data.user);
         navigate("/user/home");
@@ -37,107 +36,391 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        {/* Badge */}
-        <div className="flex justify-center mb-4">
-          <span className="px-4 py-1 text-sm font-semibold bg-green-100 text-green-700 rounded-full">
-            USER
-          </span>
-        </div>
-
-        {/* Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">User Login</h1>
-          <p className="text-gray-500 text-sm mt-1">Sign in to your account</p>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-            />
-          </div>
-
-          {/* Error */}
-          {error && (
-            <div className="text-sm text-red-500 bg-red-50 border border-red-200 p-2 rounded">
-              {error}
+    <>
+      <style>{styles}</style>
+      <div className="ul-root">
+        {/* ── Left Panel ── */}
+        <div className="ul-left">
+          <div className="ul-left-inner">
+            <div className="ul-brand">
+              <span className="ul-brand-icon">🌶️</span>
+              <span className="ul-brand-name">Rajesh Masala</span>
             </div>
-          )}
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition duration-200 disabled:opacity-60"
-          >
-            {loading ? "Signing In..." : "User Sign In"}
-          </button>
-        </form>
+            <h1 className="ul-hero-title">
+              Fresh produce,
+              <br />
+              <em>at your doorstep.</em>
+            </h1>
+            <p className="ul-hero-sub">
+              Sign in to browse our full catalogue of premium masala, grocery
+              items, and wholesale supplies.
+            </p>
 
-        {/* Google Login */}
-        <div className="mt-6">
-          <GoogleLoginButton />
+            <div className="ul-perks">
+              {[
+                { icon: "🛍️", text: "Shop premium masala & grocery" },
+                { icon: "📦", text: "Track all your orders in one place" },
+                { icon: "💰", text: "Wholesale pricing available" },
+                { icon: "💬", text: "Direct support via WhatsApp" },
+              ].map(({ icon, text }) => (
+                <div key={text} className="ul-perk-row">
+                  <span className="ul-perk-icon">{icon}</span>
+                  <span className="ul-perk-text">{text}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="ul-new-here">
+              New here?{" "}
+              <Link to="/user/register" className="ul-new-link">
+                Create an account →
+              </Link>
+            </div>
+          </div>
         </div>
 
-        {/* Register */}
-        <p className="text-sm text-center text-gray-500 mt-6">
-          Don't have an account?{" "}
-          <Link
-            to="/user/register"
-            className="text-green-600 font-medium hover:underline"
-          >
-            Register as User
-          </Link>
-        </p>
+        {/* ── Right Panel ── */}
+        <div className="ul-right">
+          <div className="ul-card">
+            {/* Badge */}
+            <div className="ul-badge">
+              <span className="ul-badge-dot" />
+              User Login
+            </div>
 
-        {/* Divider */}
-        <div className="border-t my-6"></div>
+            <h2 className="ul-card-title">Welcome back</h2>
+            <p className="ul-card-sub">Sign in to continue shopping</p>
 
-        {/* Owner Login */}
-        <div className="text-center">
-          <p className="text-sm text-gray-500 mb-3">Owner Login?</p>
+            {/* Error */}
+            {error && (
+              <div className="ul-error">
+                <span>⚠</span> {error}
+              </div>
+            )}
 
-          <Link
-            to="/owner/login"
-            className="block w-full text-center border border-green-600 text-green-600 font-medium py-2 rounded-lg hover:bg-green-50 transition"
-          >
-            Login as Owner
-          </Link>
+            <form onSubmit={handleSubmit} className="ul-form">
+              {/* Email */}
+              <div className="ul-field">
+                <label className="ul-label">Email Address</label>
+                <div className="ul-input-wrap">
+                  <svg
+                    className="ul-input-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={loading}
+                    required
+                    className="ul-input"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="ul-field">
+                <label className="ul-label">Password</label>
+                <div className="ul-input-wrap">
+                  <svg
+                    className="ul-input-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  <input
+                    type={showPass ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={loading}
+                    required
+                    className="ul-input"
+                  />
+                  <button
+                    type="button"
+                    className="ul-eye-btn"
+                    onClick={() => setShowPass((v) => !v)}
+                    tabIndex={-1}
+                    aria-label="Toggle password visibility"
+                  >
+                    {showPass ? "🙈" : "👁️"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="ul-submit-btn"
+              >
+                {loading ? (
+                  <>
+                    <span className="ul-spinner" /> Signing in…
+                  </>
+                ) : (
+                  "Sign In →"
+                )}
+              </button>
+            </form>
+
+            {/* Google login */}
+            <div className="ul-google-wrap">
+              <div className="ul-divider">
+                <span>or continue with</span>
+              </div>
+              <GoogleLoginButton />
+            </div>
+
+            {/* Register hint */}
+            <p className="ul-register-hint">
+              Don't have an account?{" "}
+              <Link to="/user/register" className="ul-link">
+                Register here
+              </Link>
+            </p>
+
+            {/* Divider */}
+            <div className="ul-divider-plain" />
+
+            {/* Owner login */}
+            <Link to="/owner/login" className="ul-owner-btn">
+              🏪 Login as Owner instead
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
+
+const styles = `
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --green:    #16a34a;
+    --green-dk: #14532d;
+    --green-lt: #f0fdf4;
+    --red:      #dc2626;
+    --red-lt:   #fef2f2;
+    --gray-900: #111827;
+    --gray-700: #374151;
+    --gray-600: #4b5563;
+    --gray-400: #9ca3af;
+    --gray-200: #e5e7eb;
+    --gray-100: #f3f4f6;
+    --gray-50:  #f9fafb;
+    --white:    #ffffff;
+    --font-d: 'Playfair Display', Georgia, serif;
+    --font-b: 'DM Sans', system-ui, sans-serif;
+    --tr: all 0.22s cubic-bezier(0.4,0,0.2,1);
+    --r-xl: 20px; --r-lg: 14px; --r-md: 10px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+
+  .ul-root {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    font-family: var(--font-b);
+  }
+
+  /* ── Left Panel ── */
+  .ul-left {
+    background: linear-gradient(150deg, #052e16 0%, #14532d 50%, #166534 100%);
+    display: flex; align-items: center; position: relative; overflow: hidden;
+  }
+  .ul-left::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 55% 50% at 85% 20%, rgba(34,197,94,0.15) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 55% at 5%  80%, rgba(5,46,22,0.5)   0%, transparent 65%);
+    pointer-events: none;
+  }
+  .ul-left-inner {
+    position: relative; z-index: 1;
+    padding: 64px 52px;
+    display: flex; flex-direction: column;
+  }
+
+  .ul-brand {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 40px;
+  }
+  .ul-brand-icon { font-size: 1.4rem; }
+  .ul-brand-name { font-family: var(--font-d); font-size: 1.1rem; color: rgba(255,255,255,0.9); }
+
+  .ul-hero-title {
+    font-family: var(--font-d);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--white); line-height: 1.1;
+    letter-spacing: -0.02em; margin: 0 0 18px;
+  }
+  .ul-hero-title em { color: #86efac; font-style: italic; }
+
+  .ul-hero-sub {
+    font-size: 0.9rem; color: rgba(255,255,255,0.55);
+    font-weight: 300; line-height: 1.75;
+    margin-bottom: 36px; max-width: 340px;
+  }
+
+  /* Perks */
+  .ul-perks { display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px; }
+  .ul-perk-row { display: flex; align-items: center; gap: 14px; }
+  .ul-perk-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .ul-perk-text { font-size: 0.85rem; color: rgba(255,255,255,0.7); font-weight: 400; }
+
+  .ul-new-here { font-size: 0.825rem; color: rgba(255,255,255,0.45); }
+  .ul-new-link { color: #86efac; font-weight: 600; text-decoration: none; }
+  .ul-new-link:hover { text-decoration: underline; }
+
+  /* ── Right Panel ── */
+  .ul-right {
+    background: var(--gray-50);
+    display: flex; align-items: center; justify-content: center; padding: 48px 24px;
+  }
+  .ul-card {
+    width: 100%; max-width: 420px;
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--r-xl); padding: 40px 36px;
+    box-shadow: var(--shadow);
+  }
+
+  /* Badge */
+  .ul-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--green-lt); border: 1px solid #bbf7d0;
+    color: var(--green); font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.09em;
+    padding: 5px 14px; border-radius: 100px; margin-bottom: 20px;
+  }
+  .ul-badge-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+    animation: ul-pulse 2s ease infinite;
+  }
+  @keyframes ul-pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+  .ul-card-title {
+    font-family: var(--font-d); font-size: 1.7rem; color: var(--gray-900);
+    margin: 0 0 6px; letter-spacing: -0.02em;
+  }
+  .ul-card-sub { font-size: 0.85rem; color: var(--gray-400); font-weight: 300; margin-bottom: 28px; }
+
+  /* Error */
+  .ul-error {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--red-lt); border: 1px solid #fecaca;
+    color: var(--red); font-size: 0.85rem; font-weight: 500;
+    padding: 11px 14px; border-radius: var(--r-md); margin-bottom: 20px;
+    animation: ul-fade-in 0.3s ease;
+  }
+  @keyframes ul-fade-in { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform:none; } }
+
+  /* Form */
+  .ul-form { display: flex; flex-direction: column; gap: 18px; margin-bottom: 20px; }
+  .ul-field { display: flex; flex-direction: column; gap: 6px; }
+  .ul-label {
+    font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--gray-600);
+  }
+  .ul-input-wrap {
+    display: flex; align-items: center;
+    background: var(--gray-50); border: 1.5px solid var(--gray-200);
+    border-radius: var(--r-md); transition: var(--tr);
+  }
+  .ul-input-wrap:focus-within {
+    border-color: var(--green); background: var(--white);
+    box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
+  }
+  .ul-input-icon {
+    width: 16px; height: 16px; color: var(--gray-400);
+    margin: 0 12px; flex-shrink: 0; transition: color 0.2s;
+  }
+  .ul-input-wrap:focus-within .ul-input-icon { color: var(--green); }
+  .ul-input {
+    flex: 1; padding: 12px 0; border: none; background: transparent;
+    font-family: var(--font-b); font-size: 0.9rem; color: var(--gray-900); outline: none;
+  }
+  .ul-input::placeholder { color: var(--gray-400); font-weight: 300; }
+  .ul-input:disabled { opacity: 0.6; }
+  .ul-eye-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 0 12px; font-size: 0.9rem; opacity: 0.6; transition: opacity 0.2s;
+  }
+  .ul-eye-btn:hover { opacity: 1; }
+
+  /* Submit */
+  .ul-submit-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 13px; margin-top: 4px;
+    background: linear-gradient(135deg, var(--green), var(--green-dk));
+    color: var(--white); border: none; border-radius: var(--r-md);
+    font-family: var(--font-b); font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: var(--tr);
+    box-shadow: 0 2px 12px rgba(22,163,74,0.3);
+  }
+  .ul-submit-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(22,163,74,0.4); }
+  .ul-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .ul-spinner {
+    width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff; border-radius: 50%; animation: ul-spin 0.7s linear infinite;
+  }
+  @keyframes ul-spin { to { transform: rotate(360deg); } }
+
+  /* Google */
+  .ul-google-wrap { margin-bottom: 20px; }
+  .ul-divider {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--gray-400); font-size: 0.75rem; margin-bottom: 14px;
+  }
+  .ul-divider::before, .ul-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--gray-200);
+  }
+
+  .ul-register-hint { font-size: 0.825rem; color: var(--gray-400); text-align: center; margin-bottom: 20px; }
+  .ul-link { color: var(--green); font-weight: 600; text-decoration: none; }
+  .ul-link:hover { text-decoration: underline; }
+
+  .ul-divider-plain { height: 1px; background: var(--gray-100); margin-bottom: 16px; }
+
+  /* Owner btn */
+  .ul-owner-btn {
+    display: block; width: 100%; text-align: center; text-decoration: none;
+    font-family: var(--font-b); font-size: 0.875rem; font-weight: 600;
+    color: var(--gray-700); background: var(--gray-100);
+    border: 1.5px solid var(--gray-200); border-radius: var(--r-md);
+    padding: 11px; transition: var(--tr); box-sizing: border-box;
+  }
+  .ul-owner-btn:hover { border-color: var(--gray-400); background: var(--gray-200); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .ul-root { grid-template-columns: 1fr; }
+    .ul-left { display: none; }
+    .ul-right { padding: 32px 16px; min-height: 100vh; }
+    .ul-card { padding: 32px 24px; }
+  }
+`;
 
 export default UserLogin;
