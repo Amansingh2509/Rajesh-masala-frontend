@@ -57,6 +57,7 @@ const CartPage = () => {
     try {
       const orderItems = cart.map((item) => ({
         productName: item.name,
+        itemId: item._id,
         price: parseFloat(item.price),
         quantity: item.quantity || 1,
       }));

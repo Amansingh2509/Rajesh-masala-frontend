@@ -14,6 +14,7 @@ const CreateItemOwner = () => {
     description: "",
     price: "",
     category: "",
+    quantity: "",
     image: null,
   });
 
@@ -70,7 +71,11 @@ const CreateItemOwner = () => {
       setFormData({ ...formData, image: files[0] });
       setImagePreview(URL.createObjectURL(files[0]));
     } else {
-      setFormData({ ...formData, [name]: value });
+      if (name === "quantity") {
+        setFormData({ ...formData, [name]: Math.max(0, parseInt(value) || 0) });
+      } else {
+        setFormData({ ...formData, [name]: value });
+      }
     }
   };
 
@@ -81,6 +86,7 @@ const CreateItemOwner = () => {
       description: item.description || "",
       price: item.price,
       category: item.category || "",
+      quantity: item.quantity || "",
       image: null,
     });
     setImagePreview(item.image || null);
@@ -94,6 +100,7 @@ const CreateItemOwner = () => {
       description: "",
       price: "",
       category: "",
+      quantity: "",
       image: null,
     });
     setImagePreview(null);
@@ -105,6 +112,7 @@ const CreateItemOwner = () => {
     d.append("description", formData.description);
     d.append("price", formData.price);
     d.append("category", formData.category);
+    d.append("quantity", formData.quantity);
     if (formData.image) d.append("image", formData.image);
     return d;
   };
@@ -314,6 +322,24 @@ const CreateItemOwner = () => {
                   </div>
                 </div>
 
+                {/* Quantity */}
+                <div className="ci-field">
+                  <label className="ci-label">Initial Quantity *</label>
+                  <div className="ci-prefix-wrap">
+                    <span className="ci-prefix">Qty:</span>
+                    <input
+                      name="quantity"
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      className="ci-input ci-input-prefix"
+                      value={formData.quantity}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
+
                 {/* Description */}
                 <div className="ci-field ci-field-full">
                   <label className="ci-label">Description</label>
@@ -510,7 +536,12 @@ const CreateItemOwner = () => {
                     {item.description && (
                       <p className="ci-product-desc">{item.description}</p>
                     )}
-                    <div className="ci-product-price">₹{item.price}</div>
+                    <div className="ci-product-price">
+                      ₹{item.price}{" "}
+                      <span className="ci-qty-badge">
+                        Stock: {item.quantity || 0}
+                      </span>
+                    </div>
                     <div className="ci-product-actions">
                       <button
                         onClick={() => handleEdit(item)}

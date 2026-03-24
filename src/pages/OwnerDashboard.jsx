@@ -176,6 +176,7 @@ const OwnerDashboard = () => {
                   </p>
                 </div>
               </div>
+
               <CreateItemOwner />
             </div>
           )}
