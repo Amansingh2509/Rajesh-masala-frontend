@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import { API_BASE } from "../utils/api.js";
 
 const OwnerRegister = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ const OwnerRegister = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8765/api/auth/owner/register",
+        `${API_BASE}/api/auth/owner/register`,
         formData,
         { withCredentials: true },
       );

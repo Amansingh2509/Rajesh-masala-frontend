@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import { API_BASE } from "../utils/api.js";
 
 const OwnerLogin = () => {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ const OwnerLogin = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8765/api/auth/owner/login",
+        `${API_BASE}/api/auth/owner/login`,
         { email, password },
         { withCredentials: true },
       );

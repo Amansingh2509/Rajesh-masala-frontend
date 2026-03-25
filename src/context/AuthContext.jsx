@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../utils/api.js";
 
 const AuthContext = createContext();
 
@@ -20,14 +21,14 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       const { data: userData } = await axios.get(
-        "http://localhost:8765/api/auth/profile",
+        `${API_BASE}/api/auth/profile`,
         { withCredentials: true },
       );
       setUser(userData);
     } catch {
       try {
         const { data: ownerData } = await axios.get(
-          "http://localhost:8765/api/auth/ownerprofile",
+          `${API_BASE}/api/auth/ownerprofile`,
           { withCredentials: true },
         );
         setOwner(ownerData);
@@ -51,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        "http://localhost:8765/api/auth/logout",
+        `${API_BASE}/api/auth/logout`,
         {},
         { withCredentials: true },
       );

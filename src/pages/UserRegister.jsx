@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import { API_BASE } from "../utils/api.js";
 
 const UserRegister = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ const UserRegister = () => {
     setError("");
     try {
       const response = await axios.post(
-        "http://localhost:8765/api/auth/user/register",
+        `${API_BASE}/api/auth/user/register`,
         formData,
         { withCredentials: true },
       );

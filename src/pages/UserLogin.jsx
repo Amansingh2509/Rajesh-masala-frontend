@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import { API_BASE } from "../utils/api.js";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 
 const UserLogin = () => {
@@ -20,7 +21,7 @@ const UserLogin = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8765/api/auth/user/login",
+        `${API_BASE}/api/auth/user/login`,
         { email, password },
         { withCredentials: true },
       );
